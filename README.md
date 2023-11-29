@@ -43,7 +43,7 @@ Feel free to customize and expand upon this bot to suit the needs of your Discor
 
 ## Contributors:
 
-- [Prashant Kumar Yadav]([https://github.com/prashant-smart])
+- [Prashant Kumar Yadav](https://github.com/prashant-smart)
 
 ## License:
 
