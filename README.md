@@ -33,14 +33,17 @@ Enhance your Discord server with this versatile bot that brings both music playb
 
 1. Clone the repository.
 2. Install the required Python packages using `pip install -r requirements.txt`.
-3. Set up your bot token in the code.
-4. Run the bot script using `python bot_script.py`.
+3. Download and install [FFmpeg](https://ffmpeg.org/download.html).
+4. Set up your bot token in the code.
+5. Run the bot script using `python bot_script.py`.
+
+**Note**:- You have to download FFMPEG in your system for the music feature of the bot, refer to [this tutorial](https://www.youtube.com/watch?v=IECI72XEox0).
 
 Feel free to customize and expand upon this bot to suit the needs of your Discord server!
 
 ## Contributors:
 
-- [Prashant Kumar Yadav]([[https://github.com/prashant-smart])
+- [Prashant Kumar Yadav]([https://github.com/prashant-smart])
 
 ## License:
 
