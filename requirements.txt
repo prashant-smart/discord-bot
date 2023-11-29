@@ -1,0 +1,5 @@
+discord.py
+asyncio 
+git+https://github.com/yt-dlp/yt-dlp.git
+PyNaCl
+ffmpeg
