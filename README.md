@@ -40,7 +40,7 @@ Feel free to customize and expand upon this bot to suit the needs of your Discor
 
 ## Contributors:
 
-- [Your Name](https://github.com/your_username)
+- [Prashant Kumar Yadav]([[https://github.com/prashant-smart])
 
 ## License:
 
