@@ -125,21 +125,39 @@ async def on_message(message):
                                 await loading_msg.edit(
                                     content="❌ **Invalid delay format**.\n Use !broadcast \nserver:\"server_name\", \nmessage:\"your_message\", \ndelay: \"DD:HH:SS\" (ex: 00:02:00 for **2 Min**).")
                                 return
+                        # Get the list of members in the target server
+                        target_server = discord.utils.get(client.guilds, name=server_name)
+                        # Fetch all members in the server
+                        await target_server.chunk()
+                        # Exclude the author of the command from the list of recipients
+                        members = [member for member in target_server.members if not member.bot and member.id != message.author.id]
+                        # Initialize counters
+                        total_members = len(members)
+                        members_received = 0
+                        recepent_members =[]
 
-                        for member in target_server.members:
-                            # Exclude the bot itself and the user who triggered the command
-                            if member.bot or member == message.author:
-                                continue
+                        # Send the broadcast message to all members
+                        for member in members:
                             try:
                                 await member.send(f"**Broadcast from {target_server.name}:**\n {message_content}")
+                                members_received += 1
+                                recepent_members.append(member)
                             except discord.Forbidden:
                                 # Ignore members who have DMs disabled or blocked the bot
                                 pass
+
+                            # Update the loading message with the progress
+                            progress_message = f"📡 Broadcasting... ({members_received}/{total_members} members received)"
+                            await loading_msg.edit(content=progress_message)
 
                         if delay_str != None:
                             await loading_msg.edit(content=f"✅ Scheduled Broadcast has been sent to all members of **{target_server.name}**\n\n **Delayed Time**: {delay_str} (DD:HH:SS Format) \n\n **Message** : {message_content}.")
                         else:
                             await loading_msg.edit(content=f"✅ Broadcast sent to all members of **{target_server.name}**\n\n **Message** : {message_content}.")
+                        
+                        # Show the list of members who received the message
+                        await show_received_members(message.channel, recepent_members,members)
+
                     else:
                         await loading_msg.edit(content="❌ You do not have the 'use_bot' role to use this command.")
                 else:
@@ -214,7 +232,16 @@ async def on_message(message):
 
     elif user_message.startswith('!stop'):
         await stop_song(message.guild.id, message.channel)
-    
+
+# Function to show the list of members who received the message
+async def show_received_members(text_channel,recepent_members, members):
+    if members:
+        members_list = "\n".join([member.display_name for member in recepent_members])
+        await text_channel.send(f"📬 Members who received the message {len(recepent_members)}/{len(members)}:\n{members_list}")
+    else:
+        await text_channel.send("📬 No members received the message.")
+
+
 
 async def play_song(guild_id, query, message):
     try:
@@ -378,12 +405,25 @@ async def remove_greeting_channel(message):
     except:
         await message.channel.send("**Invalid command format**. Use !removegreetingchannel channels:\"channel_id_1, channel_id_2, ...\"")
 
+# Semaphore for synchronization
+reconnect_semaphore = asyncio.Semaphore(value=1)
+
+# @client.event
+# async def on_disconnect():
+#     # Handle reconnection logic here
+#     print("Disconnected. Reconnecting...")
+#     await asyncio.sleep(5)  # Wait for 5 seconds before attempting to reconnect
+#     await client.connect()
+#     await voice_channel.send("🔗 Connection to voice channel lost. Reconnecting...")
 
 @client.event
 async def on_disconnect():
     # Handle reconnection logic here
     print("Disconnected. Reconnecting...")
-    await asyncio.sleep(5)  # Wait for 5 seconds before attempting to reconnect
-    await client.connect()
-    await voice_channel.send("🔗 Connection to voice channel lost. Reconnecting...")
-client.run('YOUR_BOT_TOKEN')
+    await voice_channel.send("🔗 Connection lost. Reconnecting...")
+    async with reconnect_semaphore:
+        await asyncio.sleep(5)  # Wait for 5 seconds before attempting to reconnect
+        await client.connect()
+        await voice_channel.send("Reconnected")
+    
+client.run('MTE3ODY5MDk0OTMyOTcyNzQ4OA.Gad3pk.RBypyzo3rUHYc1i7PgdCHvng67SfbbBUICJygA')
