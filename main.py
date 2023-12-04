@@ -426,4 +426,4 @@ async def on_disconnect():
         await client.connect()
         await voice_channel.send("Reconnected")
     
-client.run('MTE3ODY5MDk0OTMyOTcyNzQ4OA.Gad3pk.RBypyzo3rUHYc1i7PgdCHvng67SfbbBUICJygA')
+client.run('YOUR_DISCORD_BOT_TOKEN')
